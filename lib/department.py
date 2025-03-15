@@ -3,17 +3,40 @@ from __init__ import CURSOR, CONN
 
 
 class Department:
-
-    # Dictionary of objects saved to the database.
     all = {}
 
     def __init__(self, name, location, id=None):
         self.id = id
-        self.name = name
-        self.location = location
+        self.name = name  # Uses the setter for validation
+        self.location = location  # Uses the setter for validation
 
     def __repr__(self):
         return f"<Department {self.id}: {self.name}, {self.location}>"
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        if not isinstance(value, str):
+            raise ValueError("Department name must be a string")
+        if len(value.strip()) == 0:
+            raise ValueError("Department name cannot be empty")
+        self._name = value
+
+    @property
+    def location(self):
+        return self._location
+
+    @location.setter
+    def location(self, value):
+        if not isinstance(value, str):
+            raise ValueError("Department location must be a string")
+        if len(value.strip()) == 0:
+            raise ValueError("Department location cannot be empty")
+        self._location = value
+
 
     @classmethod
     def create_table(cls):

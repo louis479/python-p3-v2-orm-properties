@@ -4,21 +4,54 @@ from department import Department
 
 
 class Employee:
-
-    # Dictionary of objects saved to the database.
     all = {}
 
     def __init__(self, name, job_title, department_id, id=None):
         self.id = id
-        self.name = name
-        self.job_title = job_title
-        self.department_id = department_id
+        self.name = name  # Calls the setter
+        self.job_title = job_title  # Calls the setter
+        self.department_id = department_id  # Calls the setter
 
-    def __repr__(self):
-        return (
-            f"<Employee {self.id}: {self.name}, {self.job_title}, " +
-            f"Department ID: {self.department_id}>"
-        )
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        if not isinstance(value, str):
+            raise ValueError("Name must be a string.")
+        if len(value) == 0:
+            raise ValueError("Name cannot be an empty string.")
+        self._name = value
+
+    @property
+    def job_title(self):
+        return self._job_title
+
+    @job_title.setter
+    def job_title(self, value):
+        if not isinstance(value, str):
+            raise ValueError("Job title must be a string.")
+        if len(value) == 0:
+            raise ValueError("Job title cannot be an empty string.")
+        self._job_title = value
+
+    @property
+    def department_id(self):
+        return self._department_id
+
+    @department_id.setter
+    def department_id(self, value):
+            if not isinstance(value, int):
+                raise ValueError("Department ID must be an integer.")
+
+            # Check if department ID exists in the database
+            CURSOR.execute("SELECT id FROM departments WHERE id = ?", (value,))
+            if CURSOR.fetchone() is None:
+                raise ValueError("Invalid department ID. No such department exists.")
+
+            self._department_id = value
+
 
     @classmethod
     def create_table(cls):
